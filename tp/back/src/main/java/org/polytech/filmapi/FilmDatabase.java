@@ -57,4 +57,11 @@ public class FilmDatabase implements FilmStore {
         films.put(film.id(), film);
         return lastId++;
     }
+
+    @Override
+    public void update(FilmView view, long id) {
+        Film film = get(id);
+        if(film == null) throw new FilmNotFoundException(id);
+        film.updateFromView(view);
+    }
 }

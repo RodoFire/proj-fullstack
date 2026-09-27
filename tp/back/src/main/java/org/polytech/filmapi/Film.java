@@ -2,7 +2,6 @@ package org.polytech.filmapi;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDate;
@@ -10,7 +9,6 @@ import java.time.LocalDate;
 @Getter
 @Accessors(fluent = true)
 @AllArgsConstructor
-@Setter
 public class Film {
 
     private final long id;
@@ -21,6 +19,14 @@ public class Film {
 
     public static Film fromView(long id, FilmView view) {
         return new Film(id, view.titre(), view.realisateur(), view.dateSortie(), view.genre());
+    }
+
+    public Film updateFromView(FilmView view) {
+        if (view.titre() != null) this.titre = view.titre();
+        if (view.realisateur() != null) this.realisateur = view.realisateur();
+        if (view.dateSortie() != null) this.dateSortie = view.dateSortie();
+        if (view.genre() != null) this.genre = view.genre();
+        return this;
     }
 
     public enum FilmType {

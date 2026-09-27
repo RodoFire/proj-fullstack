@@ -12,5 +12,7 @@ public interface FilmStore {
 
     boolean delete(long id);
 
-    long create(FilmView film);
+    long create(FilmView view);
+
+    void update(FilmView view, long id);
 }

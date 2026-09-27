@@ -37,4 +37,8 @@ public class FilmService {
 
         return store.create(film);
     }
+
+    public void updateFilm(FilmView film, long id) {
+        store.update(film, id);
+    }
 }

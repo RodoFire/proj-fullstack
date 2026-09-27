@@ -28,7 +28,7 @@ public class FilmController {
     @PostMapping("/films")
     public ResponseEntity<String> createNewFilm(@RequestBody FilmView film) {
         long newFilmId = service.createNewFilm(film);
-        if(newFilmId == -1) {
+        if (newFilmId == -1) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -36,10 +36,17 @@ public class FilmController {
                 .build();
     }
 
+    @PutMapping("/films/{id}")
+    public ResponseEntity<String> updateFilm(@RequestBody FilmView film, @PathVariable long id) {
+        service.updateFilm(film, id);
+
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/films/{id}")
     public ResponseEntity<String> delete(@PathVariable long id) {
         boolean deleted = service.delete(id);
-        if(!deleted) {
+        if (!deleted) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok()
