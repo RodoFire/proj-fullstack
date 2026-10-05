@@ -1,12 +1,21 @@
 package org.polytech.filmapi;
 
+import org.polytech.filmapi.dto.ActeurDTO;
+import org.polytech.filmapi.dto.FilmCreationDTO;
+import org.polytech.filmapi.dto.FilmDTO;
+import org.polytech.filmapi.dto.FilmDetailDTO;
+import org.polytech.filmapi.dto.FilmUpdateDTO;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.Collection;
+import java.util.List;
+
 
 @RestController
+@RequestMapping("/api/films")
 public class FilmController {
 
     private final FilmService service;
@@ -15,19 +24,19 @@ public class FilmController {
         this.service = service;
     }
 
-    @GetMapping("/films")
-    public Collection<Film> getAll() {
-        return service.getAll();
+    @GetMapping()
+    public Collection<FilmDTO> getAll() {
+        return service.getAll().stream().map(FilmMapper::toDTO).toList();
     }
 
-    @GetMapping("/films/{id}")
-    public Film get(@PathVariable long id) {
-        return service.get(id);
+    @GetMapping("/{id}")
+    public FilmDetailDTO get(@PathVariable long id) {
+        return FilmMapper.toDetailDTO(service.get(id));
     }
 
-    @PostMapping("/films")
-    public ResponseEntity<String> createNewFilm(@RequestBody FilmView film) {
-        long newFilmId = service.createNewFilm(film);
+    @PostMapping()
+    public ResponseEntity<String> createNewFilm(@RequestBody FilmCreationDTO dto) {
+        long newFilmId = service.createNewFilm(FilmMapper.toEntity(dto));
         if (newFilmId == -1) {
             return ResponseEntity.badRequest().build();
         }
@@ -36,21 +45,36 @@ public class FilmController {
                 .build();
     }
 
-    @PutMapping("/films/{id}")
-    public ResponseEntity<String> updateFilm(@RequestBody FilmView film, @PathVariable long id) {
-        service.updateFilm(film, id);
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateFilm(@RequestBody FilmUpdateDTO dto, @PathVariable long id) {
+        Film film = service.get(id);
+        service.save(FilmMapper.update(film, dto));
 
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/films/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable long id) {
-        boolean deleted = service.delete(id);
-        if (!deleted) {
-            return ResponseEntity.noContent().build();
-        }
+        service.delete(id);
         return ResponseEntity.ok()
                 .build();
+    }
+
+    @GetMapping("/{id}/acteurs")
+    public List<ActeurDTO> getActeurs(@PathVariable long id) {
+        return FilmMapper.toActeurDTOs(service.getActeurs(id));
+    }
+
+    @PostMapping("/{id}/acteurs/{acteurId}")
+    public ResponseEntity<Void> addActeur(@PathVariable long id, @PathVariable long acteurId) {
+        service.addActeur(id, acteurId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}/acteurs/{acteurId}")
+    public ResponseEntity<Void> removeActeur(@PathVariable long id, @PathVariable long acteurId) {
+        service.removeActeur(id, acteurId);
+        return ResponseEntity.noContent().build();
     }
 
     @ExceptionHandler(FilmNotFoundException.class)

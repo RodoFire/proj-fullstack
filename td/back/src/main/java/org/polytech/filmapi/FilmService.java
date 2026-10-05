@@ -1,44 +1,68 @@
 package org.polytech.filmapi;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class FilmService {
 
-    private final FilmStore store;
-
-    public FilmService(FilmStore store) {
-        this.store = store;
-    }
+    private final FilmRepository filmRepo;
+    private final ActeurRepository acteurRepo;
 
     Collection<Film> getAll() {
-        return store.getAll();
+        return filmRepo.findAll();
     }
 
     Film get(long id) throws FilmNotFoundException {
-        return store.get(id);
+        return filmRepo.findById(id)
+                .orElseThrow(() -> new FilmNotFoundException(id));
     }
 
     void save(Film film) {
-        store.save(film);
+        filmRepo.save(film);
     }
 
-    boolean delete(long id) {
-        return store.delete(id);
+    void delete(long id) {
+        filmRepo.delete(get(id));
     }
 
-    public long createNewFilm(FilmView film) {
+    public long createNewFilm(Film film) {
         if (film.titre() == null || film.titre().isEmpty()) return -1;
         if (film.realisateur() == null || film.realisateur().isEmpty()) return -1;
         if (film.dateSortie() == null) return -1;
         if (film.genre() == null) return -1;
 
-        return store.create(film);
+        filmRepo.save(film);
+
+        return film.id();
     }
 
-    public void updateFilm(FilmView film, long id) {
-        store.update(film, id);
+    @Transactional(readOnly = true)
+    public List<Acteur> getActeurs(long filmId) {
+        return get(filmId).acteurs();
+    }
+
+    @Transactional
+    public void addActeur(long filmId, long acteurId) {
+        Film film = get(filmId);
+        film.addActeur(getActeur(acteurId));
+        filmRepo.save(film);
+    }
+
+    @Transactional
+    public void removeActeur(long filmId, long acteurId) {
+        Film film = get(filmId);
+        film.removeActeur(getActeur(acteurId));
+        filmRepo.save(film);
+    }
+
+    private Acteur getActeur(long id) {
+        return acteurRepo.findById(id)
+                .orElseThrow(() -> new ActeurNotFoundException(id));
     }
 }
