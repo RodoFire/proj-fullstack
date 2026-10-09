@@ -1,59 +1,61 @@
 # FilmApp
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.0.
+Front Angular de gestion de films et d'acteurs (CRUD, et liaison acteur / film).
 
-## Development server
+## Prérequis
+Il faut avoir préalablement :
+- Node.js et npm
+- Java 26 min et une base PostgreSQL `proj-fullstack` sur `localhost:5432` avec les identifiants dans la config, ou modifier la config pour faire correspondre à la base postegre
 
-To start a local development server, run:
+## Lancer l'application
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Etape 1. Démarrer le backend (port 8080), depuis `td/back` :
 
 ```bash
-ng generate component component-name
+./gradlew bootRun
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Etape  2. Démarrer le front, depuis `td/front/film-app` :
 
 ```bash
-ng generate --help
+npm install
+npm start
 ```
 
-## Building
+Ouvrir `http://localhost:4200/` sur le navigateur.
+Les appels `/api` sont redirigés vers `http://localhost:8080` par `proxy.conf.json`.
 
-To build the project run:
+## Fonctionnalités
 
-```bash
-ng build
-```
+- Films : liste, détail, création, modification, suppression
+- Acteurs : liste, détail, création, modification, suppression
+- Lier / retirer un acteur d'un film, depuis la page du film ou celle de l'acteur
+- Les erreurs de l'API (dont API éteinte) s'affichent en haut de la page
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Structure
+back : 
+- `*DTO` les record exposees à l'api
+- `*Repository` les repositories
+- `*Service` les services
+- `*Controller` les controllers
 
-## Running unit tests
+front :
+- `*.service.ts` : seuls fichiers qui appellent l'API (`HttpClient`)
+- `film-list`, `film-detail`, `acteur-list`, `acteur-detail` : pages
+- `film-form`, `acteur-form` : composants qu'on réutilise dans les pages (`input()` pour la valeur, `output()` pour l'envoi)
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
 
-```bash
-ng test
-```
+specificites 
+- Java utilise Lombok pour simplifier les getter et les setter
 
-## Running end-to-end tests
+endpoints : 
 
-For end-to-end (e2e) testing, run:
+| chemin            |           reponse            |
+|-------------------|:----------------------------:|
+| /api/films        |   liste de tous les films    |
+| /api/films?genre=? | liste films par genre |
+| /api/films/id     | liste les details du film avec l'id specifie |
+| /api/acteurs      | liste les acteurs |
+| /api/acteurs/id   | liste les details de l'acteur avec l'id specifie |
 
-```bash
-ng e2e
-```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
