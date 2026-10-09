@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { FilmType } from './models/film-type.model';
 import { FilmCreationDTO, FilmDTO, FilmDetailDTO, FilmUpdateDTO } from './models/film.model';
 
 @Injectable({
@@ -9,8 +10,9 @@ import { FilmCreationDTO, FilmDTO, FilmDetailDTO, FilmUpdateDTO } from './models
 export class FilmService {
   constructor(private httpClient: HttpClient) { }
 
-  getAllFilms(): Observable<FilmDTO[]> {
-    return this.httpClient.get<FilmDTO[]>('/api/films');
+  getAllFilms(genre?: FilmType): Observable<FilmDTO[]> {
+    const params = genre ? new HttpParams().set('genre', genre) : undefined;
+    return this.httpClient.get<FilmDTO[]>('/api/films', { params });
   }
 
   getFilm(id: number): Observable<FilmDetailDTO> {

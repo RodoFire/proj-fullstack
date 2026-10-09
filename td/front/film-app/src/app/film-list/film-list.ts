@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { messageErreur } from '../erreur';
 import { FilmForm } from '../film-form/film-form';
 import { FilmService } from '../film.service';
+import { FilmType } from '../models/film-type.model';
 import { FilmCreationDTO, FilmDTO } from '../models/film.model';
 
 @Component({
@@ -15,6 +16,8 @@ export class FilmList implements OnInit {
   films = signal<FilmDTO[]>([]);
   error = signal('');
   form = viewChild(FilmForm);
+  genres: FilmType[] = ['COMEDY', 'DRAMA', 'ACTION', 'SCIENCE_FICTION', 'FANTASY'];
+  genreFiltre = signal<FilmType | ''>('');
 
   constructor(private service: FilmService, private destroyRef: DestroyRef) { }
 
@@ -23,10 +26,16 @@ export class FilmList implements OnInit {
   }
 
   loadFilms(): void {
-    this.service.getAllFilms().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.service.getAllFilms(this.genreFiltre() || undefined).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: result => this.films.set(result),
       error: err => this.error.set(messageErreur(err)),
     });
+  }
+
+  filterByGenre(genre: string): void {
+    this.genreFiltre.set(genre as FilmType | '');
+    this.error.set('');
+    this.loadFilms();
   }
 
   addFilm(film: FilmCreationDTO): void {

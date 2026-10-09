@@ -1,6 +1,7 @@
 package org.polytech.filmapi;
 
 import lombok.AllArgsConstructor;
+import org.polytech.filmapi.dto.FilmDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,5 +65,9 @@ public class FilmService {
     private Acteur getActeur(long id) {
         return acteurRepo.findById(id)
                 .orElseThrow(() -> new ActeurNotFoundException(id));
+    }
+
+    public List<Film> getByGenre(Film.FilmType genre) {
+        return filmRepo.findByGenre(genre);
     }
 }

@@ -2,6 +2,10 @@
 GET http://localhost:8080/api/films
 Accept: application/json
 
+### Liste des films selon le genre
+GET http://localhost:8080/api/films?genre=FANTASY
+Accept: application/json
+
 ### Film identifié par son identifiant
 GET http://localhost:8080/api/films/1
 Accept: application/json
