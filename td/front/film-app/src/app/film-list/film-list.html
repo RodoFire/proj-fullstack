@@ -1,0 +1,18 @@
+@if (error()) {
+  <p class="error">{{ error() }}</p>
+}
+<h2>Liste des films</h2>
+<ul>
+  @for (film of films(); track film.id) {
+    <li>
+      <a [routerLink]="['/films', film.id]">{{ film.titre }}</a>
+      - {{ film.realisateur }} ({{ film.dateSortie }})
+      <button type="button" (click)="deleteFilm(film.id)">Supprimer</button>
+    </li>
+  } @empty {
+    <li>Aucun film</li>
+  }
+</ul>
+
+<h3>Ajouter un film</h3>
+<app-film-form label="Ajouter" (saved)="addFilm($event)" />

@@ -1,0 +1,32 @@
+@if (error()) {
+  <p class="error">{{ error() }}</p>
+}
+@if (film(); as film) {
+  <h2>{{ film.titre }}</h2>
+  <p>{{ film.realisateur }} - {{ film.dateSortie }} - {{ film.genre }}</p>
+
+  <h3>Modifier le film</h3>
+  <app-film-form [film]="film" label="Modifier" (saved)="updateFilm($event)" />
+
+  <h3>Acteurs</h3>
+  <ul>
+    @for (acteur of film.acteurs; track acteur.id) {
+      <li>
+        <a [routerLink]="['/acteurs', acteur.id]">{{ acteur.nom }}</a>
+        <button type="button" (click)="removeActeur(acteur.id)">Retirer</button>
+      </li>
+    } @empty {
+      <li>Aucun acteur</li>
+    }
+  </ul>
+
+  <form (ngSubmit)="addActeur()">
+    <select name="acteur" [(ngModel)]="selectedId">
+      @for (acteur of disponibles(); track acteur.id) {
+        <option [ngValue]="acteur.id">{{ acteur.nom }}</option>
+      }
+    </select>
+    <button type="submit">Ajouter l'acteur</button>
+  </form>
+}
+<a routerLink="/films">Retour</a>

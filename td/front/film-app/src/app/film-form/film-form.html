@@ -1,0 +1,11 @@
+<form (ngSubmit)="submit()">
+  <input name="titre" [(ngModel)]="titre" placeholder="Titre" required>
+  <input name="realisateur" [(ngModel)]="realisateur" placeholder="Réalisateur" required>
+  <input name="dateSortie" type="date" [(ngModel)]="dateSortie" required>
+  <select name="genre" [(ngModel)]="genre">
+    @for (g of genres; track g) {
+      <option [value]="g">{{ g }}</option>
+    }
+  </select>
+  <button type="submit">{{ label() }}</button>
+</form>

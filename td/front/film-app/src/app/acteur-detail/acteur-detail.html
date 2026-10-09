@@ -1,0 +1,31 @@
+@if (error()) {
+  <p class="error">{{ error() }}</p>
+}
+@if (acteur(); as acteur) {
+  <h2>{{ acteur.nom }}</h2>
+
+  <h3>Modifier l'acteur</h3>
+  <app-acteur-form [acteur]="acteur" label="Modifier" (saved)="updateActeur($event)" />
+
+  <h3>Films</h3>
+  <ul>
+    @for (film of acteur.films; track film.id) {
+      <li>
+        <a [routerLink]="['/films', film.id]">{{ film.titre }}</a>
+        <button type="button" (click)="removeFilm(film.id)">Retirer</button>
+      </li>
+    } @empty {
+      <li>Aucun film</li>
+    }
+  </ul>
+
+  <form (ngSubmit)="addFilm()">
+    <select name="film" [(ngModel)]="selectedId">
+      @for (film of disponibles(); track film.id) {
+        <option [ngValue]="film.id">{{ film.titre }}</option>
+      }
+    </select>
+    <button type="submit">Ajouter le film</button>
+  </form>
+}
+<a routerLink="/acteurs">Retour</a>

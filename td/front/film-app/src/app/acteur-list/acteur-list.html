@@ -1,0 +1,17 @@
+@if (error()) {
+  <p class="error">{{ error() }}</p>
+}
+<h2>Liste des acteurs</h2>
+<ul>
+  @for (acteur of acteurs(); track acteur.id) {
+    <li>
+      <a [routerLink]="['/acteurs', acteur.id]">{{ acteur.nom }}</a>
+      <button type="button" (click)="deleteActeur(acteur.id)">Supprimer</button>
+    </li>
+  } @empty {
+    <li>Aucun acteur</li>
+  }
+</ul>
+
+<h3>Ajouter un acteur</h3>
+<app-acteur-form label="Ajouter" (saved)="addActeur($event)" />
