@@ -70,4 +70,12 @@ public class FilmService {
     public List<Film> getByGenre(Film.FilmType genre) {
         return filmRepo.findByGenre(genre);
     }
+
+    public List<Film> getByTitre(String titre) {
+        return filmRepo.findByTitre(titre);
+    }
+
+    public List<Film> getByTitreNByGenre(String titre, Film.FilmType genre) {
+        return filmRepo.findByTitreNByGenre(titre, genre);
+    }
 }

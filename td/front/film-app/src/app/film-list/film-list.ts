@@ -1,11 +1,11 @@
-import { Component, DestroyRef, OnInit, signal, viewChild } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
-import { messageErreur } from '../erreur';
-import { FilmForm } from '../film-form/film-form';
-import { FilmService } from '../film.service';
-import { FilmType } from '../models/film-type.model';
-import { FilmCreationDTO, FilmDTO } from '../models/film.model';
+import {Component, DestroyRef, OnInit, signal, viewChild} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {RouterLink} from '@angular/router';
+import {messageErreur} from '../erreur';
+import {FilmForm} from '../film-form/film-form';
+import {FilmService} from '../film.service';
+import {FilmType} from '../models/film-type.model';
+import {FilmCreationDTO, FilmDTO} from '../models/film.model';
 
 @Component({
   selector: 'app-film-list',
@@ -18,15 +18,17 @@ export class FilmList implements OnInit {
   form = viewChild(FilmForm);
   genres: FilmType[] = ['COMEDY', 'DRAMA', 'ACTION', 'SCIENCE_FICTION', 'FANTASY'];
   genreFiltre = signal<FilmType | ''>('');
+  titreFiltre = signal<string | ''>('');
 
-  constructor(private service: FilmService, private destroyRef: DestroyRef) { }
+  constructor(private service: FilmService, private destroyRef: DestroyRef) {
+  }
 
   ngOnInit(): void {
     this.loadFilms();
   }
 
   loadFilms(): void {
-    this.service.getAllFilms(this.genreFiltre() || undefined).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.service.getAllFilms(this.genreFiltre() || undefined, this.titreFiltre()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: result => this.films.set(result),
       error: err => this.error.set(messageErreur(err)),
     });
@@ -34,6 +36,12 @@ export class FilmList implements OnInit {
 
   filterByGenre(genre: string): void {
     this.genreFiltre.set(genre as FilmType | '');
+    this.error.set('');
+    this.loadFilms();
+  }
+
+  filterByTitre(titre: string): void {
+    this.titreFiltre.set(titre);
     this.error.set('');
     this.loadFilms();
   }

@@ -3,6 +3,11 @@
 }
 <h2>Liste des films</h2>
 <label>
+  Titre :
+<input type="search" placeholder="Rechercher un film..." [value]="titreFiltre()" (input)="filterByTitre($any($event.target).value)" />
+</label>
+
+<label>
   Genre :
   <select [value]="genreFiltre()" (change)="filterByGenre($any($event.target).value)">
     <option value="">Tous</option>

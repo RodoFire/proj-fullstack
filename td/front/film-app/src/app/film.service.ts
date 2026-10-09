@@ -10,8 +10,15 @@ import { FilmCreationDTO, FilmDTO, FilmDetailDTO, FilmUpdateDTO } from './models
 export class FilmService {
   constructor(private httpClient: HttpClient) { }
 
-  getAllFilms(genre?: FilmType): Observable<FilmDTO[]> {
-    const params = genre ? new HttpParams().set('genre', genre) : undefined;
+  getAllFilms(genre?: FilmType, titre?: string): Observable<FilmDTO[]> {
+    let httpParams = new HttpParams();
+    if(genre != null) {
+      httpParams = httpParams.set('genre', genre);
+    }
+    if(titre) {
+      httpParams = httpParams.set('titre', titre);
+    }
+    const params = httpParams
     return this.httpClient.get<FilmDTO[]>('/api/films', { params });
   }
 

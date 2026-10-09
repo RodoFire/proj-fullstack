@@ -26,10 +26,19 @@ public class FilmController {
     }
 
     @GetMapping()
-    public Collection<FilmDTO> getAll(@RequestParam(required = false) Film.FilmType genre) {
+    public Collection<FilmDTO> getAll(@RequestParam(required = false) String titre, @RequestParam(required = false) Film.FilmType genre) {
+        if(titre != null && genre != null) {
+            return FilmMapper.toDTOs(service.getByTitreNByGenre(titre, genre));
+        }
+
+        if (titre != null) {
+            return FilmMapper.toDTOs(service.getByTitre(titre));
+        }
+
         if (genre != null) {
             return FilmMapper.toDTOs(service.getByGenre(genre));
         }
+
         return service.getAll().stream().map(FilmMapper::toDTO).toList();
     }
 
