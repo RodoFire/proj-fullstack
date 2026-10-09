@@ -2,6 +2,7 @@ package org.polytech.filmapi;
 
 import org.polytech.filmapi.dto.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -22,6 +23,7 @@ public class ActeurController {
         return service.getAll().stream().map(ActeurMapper::toDTO).toList();
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{id}")
     public ActeurDetailDTO get(@PathVariable long id) {
         return ActeurMapper.toDetailDTO(service.get(id));
@@ -49,6 +51,7 @@ public class ActeurController {
         return ResponseEntity.noContent().build();
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{id}/films")
     public List<FilmDTO> getFilms(@PathVariable long id) {
         return ActeurMapper.toFilmDTOs(service.get(id).films());

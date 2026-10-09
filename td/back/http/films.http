@@ -1,9 +1,9 @@
 ### Liste des films
-GET http://localhost:8080/films
+GET http://localhost:8080/api/films
 Accept: application/json
 
 ### Film identifié par son identifiant
-GET http://localhost:8080/films/1
+GET http://localhost:8080/api/films/1
 Accept: application/json
 
 ### Création — réponse attendue : 201 Created avec en-tête Location
@@ -23,7 +23,7 @@ Content-Type: application/json
 }
 
 ### Création invalide — réponse attendue : 400 au format ProblemDetail
-POST http://localhost:8080/films
+POST http://localhost:8080/api/films
 Content-Type: application/json
 
 {
@@ -31,7 +31,7 @@ Content-Type: application/json
 }
 
 ### Mise à jour
-PUT http://localhost:8080/films/1
+PUT http://localhost:8080/api/films/1
 Content-Type: application/json
 
 {
@@ -42,8 +42,8 @@ Content-Type: application/json
 }
 
 ### Suppression — réponse attendue : 204 No Content
-DELETE http://localhost:8080/films/1
+DELETE http://localhost:8080/api/films/1
 
 ### Identifiant inconnu — réponse attendue : 404 au format ProblemDetail
-GET http://localhost:8080/films/9999
+GET http://localhost:8080/api/films/9999
 Accept: application/json

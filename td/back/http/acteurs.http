@@ -1,0 +1,42 @@
+### Liste des acteurs
+GET http://localhost:8080/api/acteurs
+Accept: application/json
+
+### Acteur identifié par son identifiant
+GET http://localhost:8080/api/acteurs/1
+Accept: application/json
+
+### Films d'un acteur
+GET http://localhost:8080/api/acteurs/1/films
+Accept: application/json
+
+### Création — réponse attendue : 201 Created avec en-tête Location
+POST http://localhost:8080/api/acteurs
+Content-Type: application/json
+
+{
+  "nom": "Harrison Ford"
+}
+
+### Création invalide — réponse attendue : 400 Bad Request
+POST http://localhost:8080/api/acteurs
+Content-Type: application/json
+
+{
+  "nom": ""
+}
+
+### Mise à jour
+PUT http://localhost:8080/api/acteurs/1
+Content-Type: application/json
+
+{
+  "nom": "Harrison Ford"
+}
+
+### Suppression — réponse attendue : 204 No Content
+DELETE http://localhost:8080/api/acteurs/1
+
+### Identifiant inconnu — réponse attendue : 404 Not Found
+GET http://localhost:8080/api/acteurs/9999
+Accept: application/json

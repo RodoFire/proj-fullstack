@@ -7,6 +7,7 @@ import org.polytech.filmapi.dto.FilmDetailDTO;
 import org.polytech.filmapi.dto.FilmUpdateDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -29,6 +30,7 @@ public class FilmController {
         return service.getAll().stream().map(FilmMapper::toDTO).toList();
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{id}")
     public FilmDetailDTO get(@PathVariable long id) {
         return FilmMapper.toDetailDTO(service.get(id));
@@ -75,11 +77,6 @@ public class FilmController {
     public ResponseEntity<Void> removeActeur(@PathVariable long id, @PathVariable long acteurId) {
         service.removeActeur(id, acteurId);
         return ResponseEntity.noContent().build();
-    }
-
-    @ExceptionHandler(FilmNotFoundException.class)
-    public ResponseEntity<String> handle(FilmNotFoundException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
 }
