@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FilmCreationDTO, FilmDTO, FilmDetailDTO } from './models/film.model';
+import { FilmCreationDTO, FilmDTO, FilmDetailDTO, FilmUpdateDTO } from './models/film.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +19,14 @@ export class FilmService {
 
   createFilm(film: FilmCreationDTO): Observable<void> {
     return this.httpClient.post<void>('/api/films', film);
+  }
+
+  updateFilm(id: number, film: FilmUpdateDTO): Observable<void> {
+    return this.httpClient.put<void>(`/api/films/${id}`, film);
+  }
+
+  deleteFilm(id: number): Observable<void> {
+    return this.httpClient.delete<void>(`/api/films/${id}`);
   }
 
   addActeur(filmId: number, acteurId: number): Observable<void> {
