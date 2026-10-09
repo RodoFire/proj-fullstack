@@ -46,6 +46,8 @@ front :
 
 specificites 
 - Java utilise Lombok pour simplifier les getter et les setter
+- angular a un interceptor pour rediriger les erreurs 0 et 502 vers la page d'erreur de connexion au backend
+- un script sql est fourni dans `td/back/creation.sql` pour avoir des exemples en bdd.
 
 endpoints : 
 
