@@ -18,8 +18,7 @@ Etape 1. Démarrer le backend (port 8080), depuis `td/back` :
 Etape  2. Démarrer le front, depuis `td/front/film-app` :
 
 ```bash
-npm install
-npm start
+ng serve
 ```
 
 Ouvrir `http://localhost:4200/` sur le navigateur.
