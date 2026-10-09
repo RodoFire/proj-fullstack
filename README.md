@@ -1,73 +1,62 @@
-# Développement Fullstack — Polytech
+# FilmApp
 
-Dépôt de travail du cours. Il regroupe les TP du cours magistral et les TD à rendre.
+Front Angular de gestion de films et d'acteurs (CRUD, et liaison acteur / film).
 
-## Structure
+## Prérequis
+Il faut avoir préalablement :
+- Node.js et npm
+- Java 26 min et une base PostgreSQL `proj-fullstack` sur `localhost:5432` avec les identifiants dans la config, ou modifier la config pour faire correspondre à la base postegre
 
-    tp/
-      back/     projet Gradle + Spring Boot préconfiguré : TP Java / Spring
-      front/    répertoire vide, destiné au projet créé par « ng new » : TP Angular
-    td/
-      back/     TD : API REST de la bibliothèque de films
-        http/   requêtes HTTP, exécutées avec l'extension VSCode REST Client
-      front/    TD : front Angular de la bibliothèque de films
+## Lancer l'application
 
-L'ouverture du dossier racine dans VSCode déclenche la proposition des extensions
-recommandées.
-
-## Récupération du dépôt
+Etape 1. Démarrer le backend (port 8080), depuis `td/back` :
 
 ```bash
-git clone polytech-fullstack-starter.bundle mon-depot
-cd mon-depot
-git remote remove origin                 # le bundle ne constitue pas un dépôt distant
-git remote add origin <URL du dépôt GitHub>
-git push -u origin main
-```
-
-## Démarrage
-
-### Back des TP
-
-```bash
-cd tp/back
-./gradlew build      # Windows : gradlew.bat build
 ./gradlew bootRun
 ```
 
-Le wrapper télécharge Gradle 9.7.1 et, le cas échéant, le JDK 26 : aucune installation
-manuelle n'est nécessaire. Le fichier `build.gradle` ne déclare qu'une dépendance,
-`spring-boot-starter-webmvc`. Elle apporte Spring MVC, Jackson, un Tomcat embarqué ainsi
-que `spring-context`, le conteneur IoC utilisé dans les premiers TP.
-
-### Front des TP
+Etape  2. Démarrer le front, depuis `td/front/film-app` :
 
 ```bash
-cd tp/front
-ng new tp-front      # CSS, sans SSR, « None » pour les outils IA
+ng serve
 ```
 
-### TD
+Ouvrir `http://localhost:4200/` sur le navigateur.
+Les appels `/api` sont redirigés vers `http://localhost:8080` par `proxy.conf.json`.
 
-Le back est généré depuis [start.spring.io](https://start.spring.io) ou depuis l'IDE,
-**dans `td/back`**, avec la dépendance Spring Web. Le front est généré avec `ng new`,
-**dans `td/front`**.
+## Fonctionnalités
 
-## Requêtes HTTP
+- Films : liste, détail, création, modification, suppression
+- Acteurs : liste, détail, création, modification, suppression
+- Lier / retirer un acteur d'un film, depuis la page du film ou celle de l'acteur
+- Les erreurs de l'API (dont API éteinte) s'affichent en haut de la page
 
-Ni collection Postman ni collection Bruno : les requêtes sont versionnées dans des fichiers
-`.http` placés dans `td/back/http` et exécutées par l'extension VSCode
-[REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client),
-via l'action *Send Request* affichée au-dessus de chaque requête. Un fichier par ressource,
-requêtes séparées par `###`. `films.http` contient le squelette du TD 1.
+## Structure
+back :
+- `*DTO` les record exposees à l'api
+- `*Repository` les repositories
+- `*Service` les services
+- `*Controller` les controllers
 
-## Rendus
+front :
+- `*.service.ts` : seuls fichiers qui appellent l'API (`HttpClient`)
+- `film-list`, `film-detail`, `acteur-list`, `acteur-detail` : pages
+- `film-form`, `acteur-form` : composants qu'on réutilise dans les pages (`input()` pour la valeur, `output()` pour l'envoi)
 
-| Tag   | Contenu                                        |
-|-------|------------------------------------------------|
-| `td1` | API REST, stockage en mémoire                  |
-| `td2` | persistance JPA, DTO, CORS                     |
-| `td3` | front Angular branché sur l'API                |
 
-La régularité et la lisibilité des commits ainsi que la mise à jour du `README.md` sont
-prises en compte dans l'évaluation.
+specificites
+- Java utilise Lombok pour simplifier les getter et les setter
+- angular a un interceptor pour rediriger les erreurs 0 et 502 vers la page d'erreur de connexion au backend
+- un script sql est fourni dans `td/back/creation.sql` pour avoir des exemples en bdd.
+
+endpoints :
+
+| chemin            |           reponse            |
+|-------------------|:----------------------------:|
+| /api/films        |   liste de tous les films    |
+| /api/films?genre=? | liste films par genre |
+| /api/films/id     | liste les details du film avec l'id specifie |
+| /api/acteurs      | liste les acteurs |
+| /api/acteurs/id   | liste les details de l'acteur avec l'id specifie |
+
+
